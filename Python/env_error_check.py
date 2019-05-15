@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+park_width_2 = 6.1 / 2.0
+park_depth_2 = 1.9 / 2.0
+
 car_wheel_base = 2.67
 car_width_2 = 1.77 / 2.0
 car_wheel_to_bottom = 1.04
@@ -11,9 +14,13 @@ car_x_gt = 0.0
 car_y_gt = 0.0
 car_yaw_gt = 0.0
 
-car_x_mea = 0.0
-car_y_mea = 0.0
-car_yaw_mea = 0.0
+park_x_gt = 0.0
+park_y_gt = 0.0
+park_yaw_gt = 0.0
+
+park_x_mea = 0.0
+park_y_mea = 0.0
+park_yaw_mea = 0.0
 
 def quaternions_to_yaw(qw, qx, qy, qz):
     yaw = np.arctan2((2 * qx * qy + 2 * qw * qz), (1 - 2 * qy * qy - 2 * qz * qz))
@@ -42,17 +49,44 @@ def get_car_point(x, y, yaw):
 
     return car_x, car_y
 
+def get_park_point(x, y, yaw):
+    global park_width_2
+    global park_depth_2
+    cos_yaw = np.cos(yaw)
+    sin_yaw = np.sin(yaw)
+
+    park_x = []
+    park_y = []
+    park_x.append(-park_width_2 * cos_yaw - park_depth_2 * sin_yaw + x)
+    park_x.append(-park_width_2 * cos_yaw + park_depth_2 * sin_yaw + x)
+    park_x.append(park_width_2 * cos_yaw + park_depth_2 * sin_yaw + x)
+    park_x.append(park_width_2 * cos_yaw - park_depth_2 * sin_yaw + x)
+    park_x.append(-park_width_2 * cos_yaw - park_depth_2 * sin_yaw + x)
+
+    park_y.append(-park_width_2 * sin_yaw + park_depth_2 * cos_yaw + y)
+    park_y.append(-park_width_2 * sin_yaw - park_depth_2 * cos_yaw + y)
+    park_y.append(park_width_2 * sin_yaw - park_depth_2 * cos_yaw + y)
+    park_y.append(park_width_2 * sin_yaw + park_depth_2 * cos_yaw + y)
+    park_y.append(-park_width_2 * sin_yaw + park_depth_2 * cos_yaw + y)
+
+    return park_x, park_y
+
 def draw_all():
     global car_x_gt
     global car_y_gt
     global car_yaw_gt
-    global car_x_mea
-    global car_y_mea
-    global car_yaw_mea
-    x_gt, y_gt = get_car_point(car_x_gt, car_y_gt, car_yaw_gt)
-    x_mea, y_mea = get_car_point(car_x_mea, car_y_mea, car_yaw_mea)
-    plt.plot(x_gt, y_gt, 'r')
-    plt.plot(x_mea, y_mea, 'b')
+    global park_x_gt
+    global park_y_gt
+    global park_yaw_gt
+    global park_x_mea
+    global park_y_mea
+    global park_yaw_mea
+    car_x_gt_list, car_y_gt_list = get_car_point(car_x_gt, car_y_gt, car_yaw_gt)
+    park_x_gt_list, park_y_gt_list = get_car_point(park_x_gt, park_y_gt, park_yaw_gt)
+    park_x_mea_list, park_y_mea_list = get_car_point(park_x_mea, park_y_mea, park_yaw_mea)
+    plt.plot(car_x_gt_list, car_y_gt_list, 'b-')
+    plt.plot(park_x_gt_list, park_y_gt_list, 'r-')
+    plt.plot(park_x_mea_list, park_y_mea_list, 'r--')
     plt.axis('equal')
     plt.show()
 

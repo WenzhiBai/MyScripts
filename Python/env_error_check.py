@@ -62,8 +62,8 @@ rear_wheel_y = float(input("请输入右后车轮在车位坐标系下的测量�
 front_wheel_x = float(input("请输入右前车轮在车位坐标系下的测量值x:"))
 front_wheel_y = float(input("请输入右前车轮在车位坐标系下的测量值y:"))
 car_yaw_gt = np.arctan2(front_wheel_y - rear_wheel_y, front_wheel_x - rear_wheel_x)
-car_x_gt = rear_wheel_x + car_width_2 * np.sin(car_yaw_gt)
-car_y_gt = rear_wheel_y - car_width_2 * np.cos(car_yaw_gt)
+car_x_gt = rear_wheel_x + car_width_2 * np.cos(car_yaw_gt + math.pi / 2)
+car_y_gt = rear_wheel_y + car_width_2 * np.sin(car_yaw_gt + math.pi / 2)
 
 car_x_mea_w = float(input("请输入车辆位姿在世界坐标系下的记录值x:"))
 car_y_mea_w = float(input("请输入车辆位姿在世界坐标系下的记录值y:"))
@@ -74,9 +74,9 @@ car_qw_mea_w = float(input("请输入车辆位姿在世界坐标系下的记录�
 car_yaw_mea_w = quaternions_to_yaw(car_qw_mea_w, car_qx_mea_w, car_qy_mea_w, car_qz_mea_w)
 
 point_c_x_w = float(input("请输入车位C点在世界坐标系下的记录值x:"))
-point_c_y_w = float(input("请输入车位C点在世界坐标系下的记录值x:"))
+point_c_y_w = float(input("请输入车位C点在世界坐标系下的记录值y:"))
 point_d_x_w = float(input("请输入车位D点在世界坐标系下的记录值x:"))
-point_d_y_w = float(input("请输入车位D点在世界坐标系下的记录值x:"))
+point_d_y_w = float(input("请输入车位D点在世界坐标系下的记录值y:"))
 x_w_p = point_d_x_w
 y_w_p = point_d_y_w
 theta_w_p = np.arctan2(point_c_y_w - point_d_y_w, point_c_x_w - point_d_x_w)
